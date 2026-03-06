@@ -1,0 +1,54 @@
+# Backend files have been removed from this repository
+# This is now a frontend-only project for GitHub Pages deployment
+
+# PHP Files (none remaining)
+# *.php
+# db.php
+
+# Backend directories (removed)
+# Dashboard/
+# Homepage/
+# Payment/
+
+# Database files (removed)
+# *.sql
+# SQL/
+
+# System files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE/Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Log files
+*.log
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Environment files (if you add them later)
+.env
+.env.local
+
+# Node modules (if you add npm later)
+node_modules/
+
+# Backup files
+*.bak
+*.backup
+*_backup.*
+
+# Comments:
+# - The PHP files and directories are commented out by default
+# - This allows you to keep them in the repository for reference
+# - GitHub Pages will only serve the static HTML files automatically
+# - If you want to remove PHP files from the repository entirely,
+#   uncomment the lines above (remove the # symbol)

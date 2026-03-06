@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="Hotel Reservation System - Secure Payment" />
+        <meta name="author" content="HRS Team" />
+        <title>HMS | Secure Payment</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="../assets/img/logos/HMS_LOGO.png" />
+
+        <!-- Font Awesome -->
+        <script src="../JS/FontAwsome_Icon_Translator.js"></script>
+        <!-- Fonts -->
+        <link href="../CSS/Montserrat_Font.css" rel="stylesheet" type="text/css" />
+
+        <style>
+            *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+            body {
+                font-family: 'Montserrat', 'Segoe UI', sans-serif;
+                background: #1a1a2e;
+                background-image: url('../assets/img/LoginBackground.png');
+                background-size: cover;
+                background-position: center;
+                background-attachment: fixed;
+                min-height: 100vh;
+                color: #333;
+            }
+
+            .pay-overlay {
+                min-height: 100vh;
+                background: rgba(12, 12, 30, 0.88);
+                backdrop-filter: blur(5px);
+                display: flex;
+                flex-direction: column;
+            }
+
+            /* ── Header ── */
+            .pay-header {
+                padding: .9rem 2rem;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                border-bottom: 1px solid rgba(255,255,255,0.08);
+                flex-shrink: 0;
+            }
+            .pay-header .brand {
+                display: flex; align-items: center; gap: .65rem;
+                text-decoration: none;
+            }
+            .pay-header .brand img { height: 38px; }
+            .pay-header .brand-text {
+                color: #d6bd18; font-size: 1.15rem;
+                font-weight: 800; letter-spacing: 1.5px;
+            }
+            .pay-header .secure-badge {
+                display: flex; align-items: center; gap: .45rem;
+                color: rgba(255,255,255,0.65); font-size: .82rem;
+            }
+            .pay-header .secure-badge i { color: #d6bd18; }
+            .pay-header .back-link {
+                color: rgba(255,255,255,0.55); text-decoration: none;
+                font-size: .82rem; transition: color .2s;
+            }
+            .pay-header .back-link:hover { color: #d6bd18; }
+
+            /* ── Layout ── */
+            .pay-main {
+                flex: 1;
+                display: flex;
+                align-items: flex-start;
+                justify-content: center;
+                padding: 2rem 1.5rem 3rem;
+            }
+            .pay-wrapper {
+                display: flex;
+                gap: 1.5rem;
+                width: 100%;
+                max-width: 1060px;
+                align-items: flex-start;
+            }
+            .pay-card {
+                background: #fff;
+                border-radius: 18px;
+                box-shadow: 0 25px 70px rgba(0,0,0,0.45);
+            }
+
+            /* ── Payment Form Panel ── */
+            .pay-form-panel {
+                flex: 1 1 60%;
+                padding: 2rem 2.25rem;
+            }
+            .pay-form-panel h2 {
+                font-size: 1.35rem; font-weight: 800;
+                color: #1a1a2e; margin-bottom: .2rem;
+            }
+            .pay-subtitle {
+                color: #999; font-size: .82rem; margin-bottom: 1.6rem;
+            }
+
+            /* Steps */
+            .pay-steps {
+                display: flex; align-items: center; margin-bottom: 1.6rem;
+            }
+            .step {
+                display: flex; align-items: center; gap: .4rem;
+                font-size: .76rem; font-weight: 600;
+            }
+            .step-dot {
+                width: 25px; height: 25px; border-radius: 50%;
+                display: flex; align-items: center; justify-content: center;
+                font-size: .68rem; font-weight: 700; flex-shrink: 0;
+            }
+            .step.done  .step-dot { background: #d6bd18; color: #1a1a2e; }
+            .step.active .step-dot { background: #1a1a2e; color: #fff; }
+            .step.pending .step-dot { background: #e9ecef; color: #aaa; }
+            .step.done   .step-label { color: #d6bd18; }
+            .step.active .step-label { color: #1a1a2e; }
+            .step.pending .step-label { color: #bbb; }
+            .step-line {
+                flex: 1; height: 2px;
+                background: #e9ecef; margin: 0 .5rem;
+            }
+            .step-line.done { background: #d6bd18; }
+
+            /* Method Tabs */
+            .method-tabs {
+                display: flex; gap: .5rem; margin-bottom: 1.4rem;
+            }
+            .method-tab {
+                flex: 1; border: 2px solid #e9ecef; border-radius: 10px;
+                padding: .7rem; cursor: pointer;
+                display: flex; align-items: center; justify-content: center;
+                gap: .45rem; font-size: .83rem; font-weight: 600;
+                color: #666; background: #f8f9fa; transition: all .2s;
+            }
+            .method-tab.active {
+                border-color: #d6bd18; background: #fffbea; color: #1a1a2e;
+            }
+            .method-tab i { font-size: 1rem; }
+
+            /* Card Preview */
+            .card-preview {
+                background: linear-gradient(135deg, #1a1a2e 0%, #2d2d5e 55%, #3a3070 100%);
+                border-radius: 14px; padding: 1.2rem 1.5rem;
+                color: #fff; margin-bottom: 1.4rem;
+                position: relative; overflow: hidden;
+                min-height: 126px;
+                box-shadow: 0 8px 24px rgba(26,26,46,0.4);
+            }
+            .card-preview::before {
+                content: ''; position: absolute;
+                width: 200px; height: 200px;
+                background: rgba(214,189,24,0.1);
+                border-radius: 50%; top: -70px; right: -40px;
+            }
+            .card-preview::after {
+                content: ''; position: absolute;
+                width: 130px; height: 130px;
+                background: rgba(214,189,24,0.07);
+                border-radius: 50%; bottom: -50px; right: 60px;
+            }
+            .card-chip {
+                width: 34px; height: 24px;
+                background: linear-gradient(135deg, #d6bd18, #f0d44a);
+                border-radius: 4px; margin-bottom: .7rem;
+            }
+            .card-number-display {
+                font-size: 1rem; letter-spacing: 3px;
+                font-weight: 600; margin-bottom: .55rem;
+                color: rgba(255,255,255,0.88);
+            }
+            .card-meta {
+                display: flex; justify-content: space-between; align-items: flex-end;
+            }
+            .card-holder-label, .card-expiry-label {
+                font-size: .58rem; text-transform: uppercase;
+                letter-spacing: 1px; color: rgba(255,255,255,0.45); display: block;
+            }
+            .card-holder-value, .card-expiry-value {
+                font-size: .83rem; font-weight: 600;
+                color: #fff; letter-spacing: 1px;
+            }
+            .card-brand-icon {
+                font-size: 1.8rem; color: rgba(255,255,255,0.75);
+                position: absolute; top: 1rem; right: 1.5rem;
+            }
+
+            /* Form inputs */
+            .pf-group { margin-bottom: 1rem; position: relative; }
+            .pf-group label {
+                display: block; font-size: .75rem; font-weight: 700;
+                color: #555; margin-bottom: .3rem;
+                text-transform: uppercase; letter-spacing: .5px;
+            }
+            .pf-input {
+                width: 100%; padding: .68rem 1rem;
+                border: 2px solid #e9ecef; border-radius: 10px;
+                font-size: .88rem; font-family: 'Montserrat', sans-serif;
+                color: #1a1a2e; transition: border-color .2s, box-shadow .2s;
+                outline: none; background: #fdfdfd;
+            }
+            .pf-input:focus {
+                border-color: #d6bd18;
+                box-shadow: 0 0 0 3px rgba(214,189,24,0.18);
+                background: #fff;
+            }
+            .pf-input.is-invalid { border-color: #dc3545; }
+            .pf-input::placeholder { color: #c0c0c0; }
+            .pf-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+            .pf-input-icon .pf-input { padding-right: 2.5rem; }
+            .pf-input-icon i {
+                position: absolute; right: .9rem;
+                top: calc(50% + 10px); transform: translateY(-50%);
+                color: #ccc; font-size: .88rem; pointer-events: none;
+            }
+
+            /* Submit button */
+            .pay-submit-btn {
+                width: 100%; padding: .9rem;
+                background: linear-gradient(135deg, #d6bd18, #e8cc20);
+                color: #1a1a2e; font-size: .98rem; font-weight: 800;
+                font-family: 'Montserrat', sans-serif;
+                border: none; border-radius: 12px; cursor: pointer;
+                margin-top: 1.2rem; letter-spacing: .3px;
+                transition: transform .15s, box-shadow .15s;
+                display: flex; align-items: center; justify-content: center;
+                gap: .5rem;
+                box-shadow: 0 4px 16px rgba(214,189,24,0.38);
+            }
+            .pay-submit-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 24px rgba(214,189,24,0.52);
+            }
+            .pay-submit-btn:active { transform: translateY(0); }
+
+            /* PayPal panel */
+            .paypal-panel { text-align: center; padding: .75rem 0; }
+            .paypal-logo { font-size: 3rem; color: #009cde; margin-bottom: .7rem; }
+            .paypal-panel p { color: #777; font-size: .88rem; margin-bottom: 1.4rem; }
+            .paypal-btn {
+                width: 100%; padding: .85rem;
+                background: #009cde; color: #fff;
+                font-size: .95rem; font-weight: 700;
+                border: none; border-radius: 12px; cursor: pointer;
+                transition: background .2s;
+                display: flex; align-items: center; justify-content: center; gap: .5rem;
+                font-family: 'Montserrat', sans-serif;
+            }
+            .paypal-btn:hover { background: #0079a8; }
+
+            .security-note {
+                display: flex; align-items: center; justify-content: center;
+                gap: .4rem; color: #bbb; font-size: .73rem; margin-top: .85rem;
+            }
+            .security-note i { color: #198754; }
+
+            /* Hidden panes */
+            .pay-pane { display: none; }
+            .pay-pane.active { display: block; }
+
+            /* ── Booking Summary Panel ── */
+            .pay-summary-panel {
+                flex: 0 0 335px; padding: 1.75rem 1.6rem;
+            }
+            .pay-summary-panel h3 {
+                font-size: 1.05rem; font-weight: 800; color: #1a1a2e;
+                margin-bottom: 1.2rem;
+                display: flex; align-items: center; gap: .45rem;
+            }
+            .pay-summary-panel h3 i { color: #d6bd18; }
+
+            .booking-room {
+                border-radius: 12px; overflow: hidden;
+                margin-bottom: 1.2rem; border: 2px solid #f0f0f0;
+            }
+            .booking-room-img-placeholder {
+                width: 100%; height: 105px;
+                background: linear-gradient(135deg, #1a1a2e 0%, #2d2d5e 100%);
+                display: flex; align-items: center; justify-content: center;
+                color: rgba(214,189,24,0.7); font-size: 2rem;
+            }
+            .booking-room-info { padding: .7rem .9rem; }
+            .booking-room-name { font-weight: 700; font-size: .92rem; color: #1a1a2e; margin-bottom: .2rem; }
+            .booking-room-type { font-size: .76rem; color: #999; }
+
+            .booking-details { margin-bottom: 1.2rem; }
+            .booking-detail-row {
+                display: flex; align-items: center; gap: .5rem;
+                padding: .42rem 0; border-bottom: 1px solid #f5f5f5;
+                font-size: .81rem;
+            }
+            .booking-detail-row:last-child { border-bottom: none; }
+            .booking-detail-row i { width: 16px; text-align: center; color: #d6bd18; font-size: .82rem; }
+            .booking-detail-label { color: #999; flex: 1; }
+            .booking-detail-value { font-weight: 700; color: #1a1a2e; }
+
+            .price-breakdown {
+                background: #f8f9fa; border-radius: 10px;
+                padding: .9rem 1rem; margin-bottom: 1.2rem;
+            }
+            .price-row {
+                display: flex; justify-content: space-between; align-items: center;
+                font-size: .81rem; padding: .28rem 0;
+            }
+            .price-row .label { color: #777; }
+            .price-row .value { font-weight: 600; color: #333; }
+            .price-divider { height: 1px; background: #dee2e6; margin: .55rem 0; }
+            .price-total {
+                display: flex; justify-content: space-between; align-items: center;
+                margin-top: .2rem;
+            }
+            .price-total .label { font-weight: 800; color: #1a1a2e; font-size: .88rem; }
+            .price-total .value { font-weight: 800; color: #1a1a2e; font-size: 1.15rem; }
+
+            .security-badges {
+                display: flex; flex-wrap: wrap; gap: .45rem;
+            }
+            .sec-badge {
+                display: flex; align-items: center; gap: .3rem;
+                background: #f0f4ff; border-radius: 20px;
+                padding: .28rem .65rem; font-size: .7rem;
+                color: #444; font-weight: 600;
+            }
+            .sec-badge i { color: #198754; font-size: .72rem; }
+
+            /* Success Overlay */
+            .success-overlay {
+                display: none; position: fixed; inset: 0;
+                background: rgba(12,12,30,0.93);
+                z-index: 9999; align-items: center; justify-content: center;
+            }
+            .success-overlay.show { display: flex; }
+            .success-box {
+                background: #fff; border-radius: 20px;
+                padding: 2.75rem 2.5rem; text-align: center;
+                max-width: 420px; width: 90%;
+                box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+            }
+            .success-icon {
+                width: 68px; height: 68px;
+                background: linear-gradient(135deg, #d6bd18, #e8cc20);
+                border-radius: 50%;
+                display: flex; align-items: center; justify-content: center;
+                margin: 0 auto 1.2rem; font-size: 1.9rem; color: #1a1a2e;
+            }
+            .success-box h3 { font-size: 1.45rem; font-weight: 800; color: #1a1a2e; margin-bottom: .5rem; }
+            .success-box p { color: #888; font-size: .88rem; margin-bottom: 1.5rem; line-height: 1.6; }
+            .success-redirect-btn {
+                display: inline-flex; align-items: center; gap: .5rem;
+                padding: .8rem 2rem;
+                background: linear-gradient(135deg, #d6bd18, #e8cc20);
+                color: #1a1a2e; font-weight: 800; border-radius: 10px;
+                text-decoration: none; font-size: .92rem;
+                cursor: pointer; border: none;
+                font-family: 'Montserrat', sans-serif;
+            }
+
+            /* Responsive */
+            @media (max-width: 800px) {
+                .pay-wrapper { flex-direction: column-reverse; }
+                .pay-summary-panel { flex: none; width: 100%; }
+                .pay-main { padding: 1rem; }
+                .pay-form-panel { padding: 1.5rem 1.25rem; }
+                .pay-steps { display: none; }
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="pay-overlay">
+
+            <!-- Header -->
+            <header class="pay-header">
+                <a href="../index.html" class="brand">
+                    <img src="../assets/img/logos/HMS_LOGO.png" alt="HMS Logo" onerror="this.style.display='none'">
+                    <span class="brand-text">HMS</span>
+                </a>
+                <div class="secure-badge">
+                    <i class="fas fa-lock"></i>
+                    <span>Secure Checkout</span>
+                </div>
+                <a href="../index.html" class="back-link">
+                    <i class="fas fa-arrow-left"></i> Back to Home
+                </a>
+            </header>
+
+            <!-- Main Content -->
+            <main class="pay-main">
+                <div class="pay-wrapper">
+
+                    <!-- ── Payment Form Panel ── -->
+                    <div class="pay-card pay-form-panel">
+                        <h2><i class="fas fa-credit-card" style="color:#d6bd18;margin-right:.4rem;"></i>Complete Payment</h2>
+                        <p class="pay-subtitle">Your transaction is secured with 256-bit SSL encryption</p>
+
+                        <!-- Steps -->
+                        <div class="pay-steps">
+                            <div class="step done">
+                                <div class="step-dot"><i class="fas fa-check"></i></div>
+                                <span class="step-label">Booking</span>
+                            </div>
+                            <div class="step-line done"></div>
+                            <div class="step active">
+                                <div class="step-dot">2</div>
+                                <span class="step-label">Payment</span>
+                            </div>
+                            <div class="step-line"></div>
+                            <div class="step pending">
+                                <div class="step-dot">3</div>
+                                <span class="step-label">Confirmation</span>
+                            </div>
+                        </div>
+
+                        <!-- Method Tabs -->
+                        <div class="method-tabs">
+                            <div class="method-tab active" onclick="switchMethod('card')" id="tabCard">
+                                <i class="fas fa-credit-card"></i>
+                                <span>Credit / Debit Card</span>
+                            </div>
+                            <div class="method-tab" onclick="switchMethod('paypal')" id="tabPaypal">
+                                <i class="fab fa-paypal" style="color:#009cde;"></i>
+                                <span>PayPal</span>
+                            </div>
+                        </div>
+
+                        <!-- Credit Card Pane -->
+                        <div id="cardPane" class="pay-pane active">
+                            <!-- Card Preview -->
+                            <div class="card-preview">
+                                <i class="fas fa-wifi card-brand-icon" id="cardBrandIcon"></i>
+                                <div class="card-chip"></div>
+                                <div class="card-number-display" id="cardNumDisplay">•••• •••• •••• ••••</div>
+                                <div class="card-meta">
+                                    <div>
+                                        <span class="card-holder-label">Card Holder</span>
+                                        <span class="card-holder-value" id="cardHolderDisplay">YOUR NAME</span>
+                                    </div>
+                                    <div style="text-align:right;">
+                                        <span class="card-expiry-label">Expires</span>
+                                        <span class="card-expiry-value" id="cardExpiryDisplay">MM/YY</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Card Form -->
+                            <form id="cardPaymentForm" onsubmit="handlePayment(event)">
+                                <div class="pf-group pf-input-icon">
+                                    <label>Card Number</label>
+                                    <input type="text" class="pf-input" id="cardNumber"
+                                        placeholder="1234 5678 9012 3456"
+                                        maxlength="19" oninput="formatCardNumber(this)" autocomplete="cc-number" required />
+                                    <i class="far fa-credit-card"></i>
+                                </div>
+                                <div class="pf-group">
+                                    <label>Cardholder Name</label>
+                                    <input type="text" class="pf-input" id="cardHolder"
+                                        placeholder="Juan Dela Cruz"
+                                        oninput="updateCardHolder(this)" autocomplete="cc-name" required />
+                                </div>
+                                <div class="pf-row">
+                                    <div class="pf-group">
+                                        <label>Expiry Date</label>
+                                        <input type="text" class="pf-input" id="cardExpiry"
+                                            placeholder="MM / YY" maxlength="7"
+                                            oninput="formatExpiry(this)" autocomplete="cc-exp" required />
+                                    </div>
+                                    <div class="pf-group pf-input-icon">
+                                        <label>CVV / CVC</label>
+                                        <input type="password" class="pf-input" id="cardCvv"
+                                            placeholder="•••" maxlength="4"
+                                            autocomplete="cc-csc" required />
+                                        <i class="fas fa-question-circle" title="3–4 digit code on the back of your card"></i>
+                                    </div>
+                                </div>
+                                <button type="submit" class="pay-submit-btn">
+                                    <i class="fas fa-lock"></i>
+                                    Pay ₱12,250.00
+                                </button>
+                            </form>
+                            <p class="security-note">
+                                <i class="fas fa-shield-alt"></i>
+                                256-bit SSL encrypted &nbsp;·&nbsp; PCI DSS compliant &nbsp;·&nbsp; Safe &amp; secure
+                            </p>
+                        </div>
+
+                        <!-- PayPal Pane -->
+                        <div id="paypalPane" class="pay-pane">
+                            <div class="paypal-panel">
+                                <div class="paypal-logo"><i class="fab fa-paypal"></i></div>
+                                <p>You will be redirected to PayPal to complete your payment securely. No card details required.</p>
+                                <div class="price-breakdown" style="text-align:left;">
+                                    <div class="price-row">
+                                        <span class="label">Room Reservation (3 nights)</span>
+                                        <span class="value">₱12,250.00</span>
+                                    </div>
+                                </div>
+                                <button class="paypal-btn" onclick="handlePayment()">
+                                    <i class="fab fa-paypal"></i> Continue with PayPal
+                                </button>
+                                <p class="security-note">
+                                    <i class="fas fa-shield-alt"></i>
+                                    PayPal buyer protection included
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ── Booking Summary Panel ── -->
+                    <div class="pay-card pay-summary-panel">
+                        <h3><i class="fas fa-receipt"></i> Booking Summary</h3>
+
+                        <div class="booking-room">
+                            <div class="booking-room-img-placeholder">
+                                <i class="fas fa-bed"></i>
+                            </div>
+                            <div class="booking-room-info">
+                                <div class="booking-room-name">Deluxe Ocean View Room</div>
+                                <div class="booking-room-type">HMS Luxury Hotel &nbsp;·&nbsp; Tagaytay, PH</div>
+                            </div>
+                        </div>
+
+                        <div class="booking-details">
+                            <div class="booking-detail-row">
+                                <i class="fas fa-calendar-check"></i>
+                                <span class="booking-detail-label">Check-in</span>
+                                <span class="booking-detail-value">Mar 10, 2026</span>
+                            </div>
+                            <div class="booking-detail-row">
+                                <i class="fas fa-calendar-times"></i>
+                                <span class="booking-detail-label">Check-out</span>
+                                <span class="booking-detail-value">Mar 13, 2026</span>
+                            </div>
+                            <div class="booking-detail-row">
+                                <i class="fas fa-moon"></i>
+                                <span class="booking-detail-label">Duration</span>
+                                <span class="booking-detail-value">3 nights</span>
+                            </div>
+                            <div class="booking-detail-row">
+                                <i class="fas fa-user-friends"></i>
+                                <span class="booking-detail-label">Guests</span>
+                                <span class="booking-detail-value">2 Adults</span>
+                            </div>
+                        </div>
+
+                        <div class="price-breakdown">
+                            <div class="price-row">
+                                <span class="label">Room rate × 3 nights</span>
+                                <span class="value">₱11,250.00</span>
+                            </div>
+                            <div class="price-row">
+                                <span class="label">Service fee</span>
+                                <span class="value">₱750.00</span>
+                            </div>
+                            <div class="price-row">
+                                <span class="label">VAT (12%)</span>
+                                <span class="value">₱250.00</span>
+                            </div>
+                            <div class="price-divider"></div>
+                            <div class="price-total">
+                                <span class="label">Total</span>
+                                <span class="value">₱12,250.00</span>
+                            </div>
+                        </div>
+
+                        <div class="security-badges">
+                            <div class="sec-badge"><i class="fas fa-shield-alt"></i> SSL Secure</div>
+                            <div class="sec-badge"><i class="fas fa-lock"></i> Encrypted</div>
+                            <div class="sec-badge"><i class="fas fa-check-circle"></i> Verified</div>
+                            <div class="sec-badge"><i class="fas fa-undo"></i> Cancellable</div>
+                        </div>
+                    </div>
+
+                </div>
+            </main>
+        </div>
+
+        <!-- Success Overlay -->
+        <div class="success-overlay" id="successOverlay">
+            <div class="success-box">
+                <div class="success-icon"><i class="fas fa-check"></i></div>
+                <h3>Payment Successful!</h3>
+                <p>Your booking is confirmed! A confirmation email has been sent to you. Thank you for choosing HMS Luxury Hotel.</p>
+                <button class="success-redirect-btn" onclick="window.location.href='../index.html'">
+                    <i class="fas fa-home"></i> Back to Home
+                </button>
+            </div>
+        </div>
+
+        <script>
+            // Switch payment method tabs
+            function switchMethod(method) {
+                document.getElementById('tabCard').classList.toggle('active', method === 'card');
+                document.getElementById('tabPaypal').classList.toggle('active', method === 'paypal');
+                document.getElementById('cardPane').classList.toggle('active', method === 'card');
+                document.getElementById('paypalPane').classList.toggle('active', method === 'paypal');
+            }
+
+            // Card number: format as "1234 5678 9012 3456" and update preview
+            function formatCardNumber(input) {
+                let raw = input.value.replace(/\D/g, '').substring(0, 16);
+                input.value = raw.match(/.{1,4}/g)?.join(' ') || raw;
+                let display = raw.padEnd(16, '•').match(/.{1,4}/g).join(' ');
+                document.getElementById('cardNumDisplay').textContent = display;
+                // Brand detection
+                const icon = document.getElementById('cardBrandIcon');
+                if (/^4/.test(raw))          icon.className = 'fab fa-cc-visa card-brand-icon';
+                else if (/^5[1-5]/.test(raw)) icon.className = 'fab fa-cc-mastercard card-brand-icon';
+                else if (/^3[47]/.test(raw))  icon.className = 'fab fa-cc-amex card-brand-icon';
+                else if (/^6011/.test(raw))   icon.className = 'fab fa-cc-discover card-brand-icon';
+                else                          icon.className = 'fas fa-wifi card-brand-icon';
+            }
+
+            function updateCardHolder(input) {
+                document.getElementById('cardHolderDisplay').textContent =
+                    input.value.toUpperCase() || 'YOUR NAME';
+            }
+
+            function formatExpiry(input) {
+                let raw = input.value.replace(/\D/g, '').substring(0, 4);
+                if (raw.length >= 2) raw = raw.substring(0, 2) + ' / ' + raw.substring(2);
+                input.value = raw;
+                document.getElementById('cardExpiryDisplay').textContent = raw || 'MM/YY';
+            }
+
+            // Handle payment (demo — no backend)
+            function handlePayment(e) {
+                if (e) e.preventDefault();
+                document.getElementById('successOverlay').classList.add('show');
+            }
+        </script>
+
+        <script src="../JS/BootstrapBundle.js"></script>
+    </body>
+</html>

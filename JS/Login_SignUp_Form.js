@@ -1,3 +1,3 @@
 document.getElementById('returnbtn').onclick = function() {
-    window.location.href = 'index.php';
+    window.location.href = '../index.html';
 };  

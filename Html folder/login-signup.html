@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HMS | Login or Sign Up</title>
+    <link rel="icon" type="image/x-icon" href="../assets/img/logos/HMS_LOGO.png" />
+    <script src="../JS/FontAwsome_Icon_Translator.js"></script>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            font-family: 'Montserrat', 'Jost', sans-serif;
+            background: #0f0f1a;
+        }
+
+        /* ── LEFT PANEL ── */
+        .lp-hero {
+            flex: 1;
+            position: relative;
+            background: url('../assets/img/LoginBackground.png') center/cover no-repeat;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 3rem;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        .lp-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(160deg, rgba(10,10,30,.55) 0%, rgba(10,10,30,.85) 100%);
+        }
+        .lp-hero-content { position: relative; z-index: 1; }
+        .lp-logo {
+            position: absolute;
+            top: 2.5rem;
+            left: 3rem;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+            text-decoration: none;
+        }
+        .lp-logo img { height: 44px; }
+        .lp-logo span {
+            color: #fff;
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: .04em;
+        }
+        .lp-tagline {
+            color: #d6bd18;
+            font-size: .875rem;
+            font-weight: 600;
+            letter-spacing: .15em;
+            text-transform: uppercase;
+            margin-bottom: .75rem;
+        }
+        .lp-headline {
+            color: #fff;
+            font-size: clamp(1.8rem, 3vw, 2.6rem);
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1.2rem;
+        }
+        .lp-desc {
+            color: rgba(255,255,255,.7);
+            font-size: .95rem;
+            line-height: 1.65;
+            max-width: 400px;
+            margin-bottom: 2rem;
+        }
+        .lp-back {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            color: rgba(255,255,255,.75);
+            font-size: .85rem;
+            text-decoration: none;
+            transition: color .2s;
+        }
+        .lp-back:hover { color: #d6bd18; }
+
+        /* ── RIGHT PANEL ── */
+        .lp-form-panel {
+            width: 480px;
+            min-height: 100vh;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 3rem 3.5rem;
+            position: relative;
+        }
+
+        /* Tab switcher */
+        .lp-tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 2.5rem;
+            border-bottom: 2px solid #eee;
+        }
+        .lp-tab {
+            flex: 1;
+            text-align: center;
+            padding: .75rem 0;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #aaa;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+            transition: color .25s, border-color .25s;
+            user-select: none;
+        }
+        .lp-tab.active {
+            color: #1a1a2e;
+            border-bottom-color: #d6bd18;
+        }
+
+        /* Form panels */
+        .lp-pane { display: none; }
+        .lp-pane.active { display: block; }
+
+        .lp-form-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: .4rem;
+        }
+        .lp-form-sub {
+            color: #888;
+            font-size: .875rem;
+            margin-bottom: 2rem;
+        }
+
+        .lp-field { margin-bottom: 1.25rem; }
+        .lp-field label {
+            display: block;
+            font-size: .8rem;
+            font-weight: 600;
+            color: #555;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            margin-bottom: .45rem;
+        }
+        .lp-field input {
+            width: 100%;
+            padding: .75rem 1rem;
+            border: 1.5px solid #ddd;
+            border-radius: 8px;
+            font-size: .95rem;
+            font-family: inherit;
+            color: #1a1a2e;
+            outline: none;
+            transition: border-color .2s, box-shadow .2s;
+            background: #fafafa;
+        }
+        .lp-field input:focus {
+            border-color: #d6bd18;
+            box-shadow: 0 0 0 3px rgba(214,189,24,.15);
+            background: #fff;
+        }
+
+        .lp-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.75rem; }
+        .lp-remember { display: flex; align-items: center; gap: .45rem; font-size: .85rem; color: #555; cursor: pointer; }
+        .lp-remember input[type=checkbox] { width: 15px; height: 15px; accent-color: #d6bd18; cursor: pointer; }
+
+        .lp-btn {
+            width: 100%;
+            padding: .85rem;
+            background: #1a1a2e;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: inherit;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            letter-spacing: .04em;
+            transition: background .25s, transform .15s;
+        }
+        .lp-btn:hover { background: #2d2d5e; }
+        .lp-btn:active { transform: scale(.98); }
+        .lp-btn.gold { background: #d6bd18; color: #1a1a2e; }
+        .lp-btn.gold:hover { background: #c0a812; }
+
+        .lp-divider {
+            text-align: center;
+            color: #bbb;
+            font-size: .8rem;
+            margin: 1.25rem 0;
+            position: relative;
+        }
+        .lp-divider::before, .lp-divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 42%;
+            height: 1px;
+            background: #eee;
+        }
+        .lp-divider::before { left: 0; }
+        .lp-divider::after { right: 0; }
+
+        .lp-demo-note {
+            margin-top: 1.5rem;
+            padding: .9rem 1rem;
+            background: #fffbea;
+            border: 1px solid #ffe77a;
+            border-radius: 8px;
+            font-size: .8rem;
+            color: #7a6200;
+            display: flex;
+            gap: .5rem;
+            align-items: flex-start;
+        }
+        .lp-demo-note i { margin-top: 2px; flex-shrink: 0; }
+
+        /* Responsive */
+        @media (max-width: 860px) {
+            .lp-hero { display: none; }
+            .lp-form-panel { width: 100%; padding: 2.5rem 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Left hero panel -->
+    <div class="lp-hero">
+        <a class="lp-logo" href="../index.html">
+            <img src="../assets/img/logos/HMS_LOGO.png" alt="HMS Logo">
+            <span>HMS</span>
+        </a>
+        <div class="lp-hero-content">
+            <p class="lp-tagline">Hotel Management System</p>
+            <h1 class="lp-headline">Your perfect stay<br>starts here.</h1>
+            <p class="lp-desc">Browse exclusive rooms, make reservations, and manage your bookings all in one place. Experience hospitality redefined.</p>
+            <a class="lp-back" href="../index.html">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </a>
+        </div>
+    </div>
+
+    <!-- Right form panel -->
+    <div class="lp-form-panel">
+
+        <div class="lp-tabs">
+            <div class="lp-tab active" id="tab-login" onclick="switchTab('login')">Login</div>
+            <div class="lp-tab" id="tab-signup" onclick="switchTab('signup')">Sign Up</div>
+        </div>
+
+        <!-- Login pane -->
+        <div class="lp-pane active" id="pane-login">
+            <h2 class="lp-form-title">Welcome back</h2>
+            <p class="lp-form-sub">Sign in to your HMS account</p>
+
+            <div class="lp-field">
+                <label for="login-email">Email Address</label>
+                <input type="email" id="login-email" placeholder="you@example.com">
+            </div>
+            <div class="lp-field">
+                <label for="login-pass">Password</label>
+                <input type="password" id="login-pass" placeholder="••••••••">
+            </div>
+
+            <div class="lp-row">
+                <label class="lp-remember">
+                    <input type="checkbox"> Remember me
+                </label>
+            </div>
+
+            <button class="lp-btn" onclick="goToDashboard()">Login &nbsp;<i class="fas fa-arrow-right"></i></button>
+
+            <div class="lp-demo-note">
+                <i class="fas fa-info-circle"></i>
+                <span>Demo mode — click <strong>Login</strong> to proceed directly to the dashboard without entering credentials.</span>
+            </div>
+        </div>
+
+        <!-- Sign Up pane -->
+        <div class="lp-pane" id="pane-signup">
+            <h2 class="lp-form-title">Create account</h2>
+            <p class="lp-form-sub">Join HMS and start booking today</p>
+
+            <div class="lp-field">
+                <label for="su-name">Full Name</label>
+                <input type="text" id="su-name" placeholder="Juan dela Cruz">
+            </div>
+            <div class="lp-field">
+                <label for="su-email">Email Address</label>
+                <input type="email" id="su-email" placeholder="you@example.com">
+            </div>
+            <div class="lp-field">
+                <label for="su-phone">Phone Number</label>
+                <input type="tel" id="su-phone" placeholder="+63 9XX XXX XXXX" maxlength="16">
+            </div>
+            <div class="lp-field">
+                <label for="su-pass">Password</label>
+                <input type="password" id="su-pass" placeholder="Create a strong password">
+            </div>
+
+            <button class="lp-btn gold" onclick="goToDashboard()">Create Account &nbsp;<i class="fas fa-arrow-right"></i></button>
+
+            <div class="lp-demo-note">
+                <i class="fas fa-info-circle"></i>
+                <span>Demo mode — click <strong>Create Account</strong> to proceed directly to the dashboard.</span>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function switchTab(tab) {
+            document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+            document.getElementById('tab-signup').classList.toggle('active', tab === 'signup');
+            document.getElementById('pane-login').classList.toggle('active', tab === 'login');
+            document.getElementById('pane-signup').classList.toggle('active', tab === 'signup');
+        }
+
+        function goToDashboard() {
+            window.location.href = 'Dashboard.html';
+        }
+    </script>
+</body>
+</html>

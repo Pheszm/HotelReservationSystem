@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="Hotel Reservation System — Browse and book luxury rooms in Balingasag, Misamis Oriental. Experience world-class hospitality." />
+        <meta name="author" content="HMS Team" />
+        <title>HMS | Home</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="assets/img/logos/HMS_LOGO.png" />
+
+        <!-- FONT AWSOME ICON TRANSLATOR -->
+        <script src="js/FontAwsome_Icon_Translator.js"></script>
+
+        <!--FONTS PART-->
+        <link href="CSS/Montserrat_Font.css" rel="stylesheet" type="text/css" />
+        <link href="CSS/Roboto_Font.css" rel="stylesheet" type="text/css" />
+
+        <!--CORE CSS PART-->
+        <link href="css/styles.css" rel="stylesheet"/>
+
+        <!-- Chatbot Widget Styles -->
+        <style>
+            #chatbot-panel {
+                display: none;
+                position: fixed;
+                bottom: 90px;
+                right: 1.5rem;
+                width: 340px;
+                max-height: 480px;
+                background: #fff;
+                border-radius: 12px;
+                box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+                z-index: 9999;
+                flex-direction: column;
+                overflow: hidden;
+                font-family: 'Roboto', sans-serif;
+            }
+            #chatbot-panel.open {
+                display: flex;
+            }
+            #chatbot-header {
+                background: #1a1a2e;
+                color: #fff;
+                padding: 14px 16px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                font-weight: 600;
+                font-size: 15px;
+            }
+            #chatbot-header span { display: flex; align-items: center; gap: 8px; }
+            #chatbot-close {
+                background: none;
+                border: none;
+                color: #fff;
+                font-size: 18px;
+                cursor: pointer;
+                line-height: 1;
+                padding: 0;
+            }
+            #chatbot-messages {
+                flex: 1;
+                overflow-y: auto;
+                padding: 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                background: #f7f8fc;
+            }
+            .chat-msg {
+                max-width: 80%;
+                padding: 9px 13px;
+                border-radius: 16px;
+                font-size: 14px;
+                line-height: 1.45;
+                word-break: break-word;
+            }
+            .chat-msg.bot {
+                background: #e9eaf0;
+                color: #222;
+                align-self: flex-start;
+                border-bottom-left-radius: 4px;
+            }
+            .chat-msg.user {
+                background: #1a1a2e;
+                color: #fff;
+                align-self: flex-end;
+                border-bottom-right-radius: 4px;
+            }
+            #chatbot-input-row {
+                display: flex;
+                border-top: 1px solid #e0e0e0;
+                background: #fff;
+                padding: 8px;
+                gap: 6px;
+            }
+            #chatbot-input {
+                flex: 1;
+                border: 1px solid #ddd;
+                border-radius: 20px;
+                padding: 8px 14px;
+                font-size: 14px;
+                outline: none;
+            }
+            #chatbot-send {
+                background: #1a1a2e;
+                color: #fff;
+                border: none;
+                border-radius: 20px;
+                padding: 8px 16px;
+                font-size: 14px;
+                cursor: pointer;
+                transition: background 0.2s;
+            }
+            #chatbot-send:hover { background: #2d2d5e; }
+            #chatbotbtn { cursor: pointer; width: 64px; height: 64px; z-index: 9998; }
+
+            /* ─── PAGE ENHANCEMENTS ─── */
+
+            /* Navbar LOGIN button */
+            .LoginBtnn {
+                background: linear-gradient(135deg, #e8cc20 0%, #c9ab10 100%);
+                color: #fff !important;
+                border: none;
+                padding: .45rem 1.35rem;
+                border-radius: 25px;
+                font-weight: 700;
+                font-size: .78rem;
+                letter-spacing: .1em;
+                cursor: pointer;
+                margin-left: .75rem;
+                transition: transform .2s, box-shadow .2s;
+                box-shadow: 0 3px 10px rgba(214,189,24,.4);
+            }
+            .LoginBtnn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 18px rgba(214,189,24,.55);
+            }
+
+            /* Section heading accent */
+            .section-heading { position: relative; }
+            .section-heading::after {
+                content: '';
+                display: block;
+                width: 50px;
+                height: 3px;
+                background: linear-gradient(90deg, #d6bd18, transparent);
+                margin: .5rem auto 0;
+                border-radius: 2px;
+            }
+
+            /* Stats strip */
+            .stats-strip { background: #1a1a2e; padding: 2.5rem 0; }
+            .stat-item {
+                padding: 1rem 1.5rem;
+                border-right: 1px solid rgba(255,255,255,.12);
+            }
+            .stat-item:last-child { border-right: none; }
+            .stat-number {
+                display: block;
+                font-size: 2.4rem;
+                font-weight: 800;
+                color: #d6bd18;
+                line-height: 1;
+            }
+            .stat-label {
+                display: block;
+                font-size: .75rem;
+                color: rgba(255,255,255,.6);
+                letter-spacing: .12em;
+                text-transform: uppercase;
+                margin-top: .35rem;
+            }
+
+            /* Room price badge */
+            .room-price-badge {
+                display: inline-block;
+                background: linear-gradient(135deg, #1a1a2e, #2d2d5e);
+                color: #d6bd18;
+                font-size: .78rem;
+                font-weight: 700;
+                padding: .3rem .8rem;
+                border-radius: 20px;
+                margin-top: .4rem;
+                letter-spacing: .04em;
+            }
+
+            /* Service cards */
+            .service-card {
+                background: #fff;
+                border-radius: 16px;
+                padding: 2.5rem 1.75rem 2rem;
+                box-shadow: 0 4px 24px rgba(0,0,0,.07);
+                transition: transform .3s, box-shadow .3s, border-color .3s;
+                height: 100%;
+                border-bottom: 3px solid transparent;
+            }
+            .service-card:hover {
+                transform: translateY(-7px);
+                box-shadow: 0 14px 40px rgba(0,0,0,.12);
+                border-bottom-color: #d6bd18;
+            }
+
+            /* Contact info cards — light background */
+            .contact-info-card {
+                background: #fff;
+                border: 1px solid #e8e9ef;
+                border-radius: 16px;
+                padding: 2rem 1.25rem;
+                text-align: center;
+                margin-bottom: 2rem;
+                box-shadow: 0 4px 24px rgba(0,0,0,.07);
+                transition: transform .3s, box-shadow .3s;
+            }
+            .contact-info-card:hover { transform: translateY(-5px); box-shadow: 0 12px 36px rgba(0,0,0,.12); }
+            .ci-icon {
+                width: 62px;
+                height: 62px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, #1a1a2e, #2d2d5e);
+                color: #d6bd18;
+                font-size: 1.3rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto 1rem;
+                box-shadow: 0 4px 14px rgba(26,26,46,.25);
+            }
+            .contact-info-card h6 { color: #1a1a2e; font-weight: 700; font-size: 1rem; margin-bottom: .35rem; }
+            .contact-info-card p { color: #666; font-size: .875rem; margin: 0; line-height: 1.6; }
+
+            /* Contact form styling */
+            #contactForm .form-control {
+                border-radius: 8px;
+                border: 1.5px solid #e0e0e0;
+                padding: .75rem 1rem;
+                font-size: .95rem;
+                transition: border-color .2s, box-shadow .2s;
+            }
+            #contactForm .form-control:focus {
+                border-color: #d6bd18;
+                box-shadow: 0 0 0 3px rgba(214,189,24,.15);
+            }
+            #contactForm .form-group { margin-bottom: 1.1rem; }
+            #contactForm textarea.form-control { min-height: 156px; resize: none; }
+
+            /* Footer enhancements */
+            .footer { background: #f8f9fa; border-top: 1px solid #e9ecef; }
+            .footer-link {
+                color: #666;
+                text-decoration: none;
+                font-size: .875rem;
+                display: block;
+                margin-bottom: .45rem;
+                transition: color .2s, padding-left .2s;
+            }
+            .footer-link:hover { color: #1a1a2e; padding-left: 4px; }
+
+            /* Scroll-to-top button */
+            #scrollTopBtn {
+                position: fixed;
+                bottom: 104px;
+                left: 1.5rem;
+                width: 44px;
+                height: 44px;
+                border-radius: 50%;
+                background: #1a1a2e;
+                color: #fff;
+                border: 2px solid rgba(214,189,24,.4);
+                font-size: .95rem;
+                cursor: pointer;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity .35s, transform .25s, background .2s;
+                z-index: 9990;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 4px 14px rgba(0,0,0,.2);
+            }
+            #scrollTopBtn.visible { opacity: 1; pointer-events: auto; }
+            #scrollTopBtn:hover { background: #2d2d5e; transform: translateY(-3px); }
+
+            /* Scroll-reveal */
+            .reveal {
+                opacity: 0;
+                transform: translateY(30px);
+                transition: opacity .65s ease, transform .65s ease;
+            }
+            .reveal.visible { opacity: 1; transform: none; }
+
+            /* ── Room Modal Redesign ── */
+            .portfolio-modal .modal-dialog {
+                max-width: 900px;
+                max-height: calc(100vh - 2rem);
+                margin: 1rem auto;
+            }
+            .portfolio-modal .modal-content {
+                border: none;
+                border-radius: 16px;
+                overflow: hidden;
+                max-height: calc(100vh - 2rem);
+            }
+            .rm-body {
+                display: flex;
+                flex-direction: row;
+                max-height: calc(100vh - 2rem);
+                overflow: hidden;
+            }
+            @media (max-width: 767px) {
+                .rm-body { flex-direction: column; max-height: calc(100vh - 2rem); }
+            }
+
+            .rm-img-col {
+                flex: 0 0 300px;
+                position: relative;
+                overflow: hidden;
+            }
+            @media (max-width: 767px) { .rm-img-col { flex: 0 0 180px; width: 100%; } }
+            .rm-img-col img {
+                width: 100%; height: 100%; object-fit: cover;
+                display: block;
+            }
+            .rm-img-overlay {
+                position: absolute; inset: 0;
+                background: linear-gradient(to top, rgba(10,10,28,.85) 0%, transparent 55%);
+            }
+            .rm-price-tag {
+                position: absolute; bottom: 16px; left: 16px;
+                background: #d6bd18; color: #1a1a2e;
+                font-weight: 800; font-size: 1.25rem;
+                padding: .35rem 1rem; border-radius: 8px;
+                line-height: 1.2;
+            }
+            .rm-price-tag small { font-size: .65rem; font-weight: 500; display: block; }
+
+            .rm-detail-col {
+                flex: 1;
+                padding: 1.5rem 1.75rem;
+                overflow-y: auto;
+                max-height: calc(100vh - 2rem);
+            }
+            .rm-title {
+                font-size: 1.4rem; font-weight: 800; color: #1a1a2e;
+                margin-bottom: .15rem; line-height: 1.2;
+            }
+            .rm-subtitle { color: #888; font-size: .82rem; margin-bottom: .75rem; }
+
+            .rm-badges { display: flex; flex-wrap: wrap; gap: .35rem; margin-bottom: .9rem; }
+            .rm-badge {
+                display: inline-flex; align-items: center; gap: .35rem;
+                background: #f0f1f6; color: #333; font-size: .78rem; font-weight: 600;
+                padding: .3rem .8rem; border-radius: 20px;
+            }
+            .rm-badge i { color: #d6bd18; font-size: .75rem; }
+
+            .rm-section-title {
+                font-size: .7rem; font-weight: 700; color: #999;
+                text-transform: uppercase; letter-spacing: .12em;
+                margin-bottom: .6rem;
+            }
+            .rm-amenities-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: .35rem;
+                margin-bottom: .9rem;
+            }
+            .rm-amenity {
+                display: flex; align-items: center; gap: .5rem;
+                background: #f8f9fb; border-radius: 8px;
+                padding: .35rem .6rem; font-size: .78rem; color: #333;
+            }
+            .rm-amenity i { color: #d6bd18; width: 15px; text-align: center; }
+
+            .rm-info-strip {
+                display: flex; gap: .6rem;
+                margin-bottom: 1rem;
+            }
+            .rm-info-item {
+                flex: 1; background: #1a1a2e; border-radius: 8px;
+                padding: .5rem .4rem; text-align: center;
+            }
+            .rm-info-label { display: block; font-size: .62rem; color: rgba(255,255,255,.55); text-transform: uppercase; letter-spacing: .08em; }
+            .rm-info-val { display: block; font-size: .9rem; font-weight: 700; color: #d6bd18; margin-top: .1rem; }
+
+            .rm-reserve-btn {
+                width: 100%; padding: .75rem;
+                background: linear-gradient(135deg, #1a1a2e, #2d2d5e);
+                color: #fff; border: none; border-radius: 10px;
+                font-size: .95rem; font-weight: 700; letter-spacing: .04em;
+                cursor: pointer; transition: opacity .2s, transform .15s;
+                display: flex; align-items: center; justify-content: center; gap: .6rem;
+            }
+            .rm-reserve-btn:hover { opacity: .88; transform: translateY(-2px); }
+            .rm-close-btn {
+                position: absolute; top: 12px; right: 12px; z-index: 20;
+                width: 34px; height: 34px; border-radius: 50%;
+                background: rgba(0,0,0,.45); border: none; color: #fff;
+                font-size: 1rem; cursor: pointer; display: flex;
+                align-items: center; justify-content: center;
+                transition: background .2s;
+            }
+            .rm-close-btn:hover { background: rgba(0,0,0,.7); }
+            .portfolio-modal .modal-content { border: none; border-radius: 16px; overflow: hidden; }
+        </style>
+    </head>
+
+    <body id="page-top">
+
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
+            <div class="container">
+                <a class="navbar-brand" href="#page-top"><img src="assets/img/logos/HMS_LOGO.png" alt="..." /></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    Menu
+                    <i class="fas fa-bars ms-1"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav text-uppercase ms-auto py-4 py-lg-0">
+                        <li class="nav-item"><a class="nav-link" href="#page-top">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#portfolio">Rooms</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#services">Services</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#team">Team</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+                        <button class="LoginBtnn" id="LoginButtnn">LOGIN</button>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Masthead-->
+        <header class="masthead">
+            <div class="container">
+                <div class="masthead-subheading">Welcome To!</div>
+                <div class="masthead-heading text-uppercase">Hotel Reservation System</div>
+                <a class="btn btn-primary btn-xl text-uppercase" href="#portfolio">Reserve Now</a>
+            </div>
+        </header>
+
+        <!-- Stats Strip -->
+        <section class="stats-strip">
+            <div class="container">
+                <div class="row text-center g-0">
+                    <div class="col-6 col-md-3">
+                        <div class="stat-item">
+                            <span class="stat-number">6+</span>
+                            <span class="stat-label">Room Types</span>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="stat-item">
+                            <span class="stat-number">3</span>
+                            <span class="stat-label">Amenities</span>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="stat-item">
+                            <span class="stat-number">24/7</span>
+                            <span class="stat-label">Support</span>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="stat-item">
+                            <span class="stat-number">100%</span>
+                            <span class="stat-label">Satisfaction</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+         <!-- Portfolio Grid-->
+         <section class="page-section bg-light" id="portfolio">
+            <div class="container">
+                <div class="text-center">
+                    <h2 class="section-heading text-uppercase">Guest Rooms</h2>
+                    <h3 class="section-subheading text-muted">Accommodations</h3>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4 col-sm-6 mb-4">
+                        <!-- Portfolio item 1-->
+                        <div class="portfolio-item">
+                            <a class="portfolio-link" data-bs-toggle="modal" href="#portfolioModal1">
+                                <div class="portfolio-hover">
+                                    <div class="portfolio-hover-content"><i class="fas fa-clipboard-check fa-3x"></i></div>
+                                </div>
+                                <img class="img-fluid" src="assets/img/portfolio/RoomImage1.jpg" alt="..." />
+                            </a>
+                            <div class="portfolio-caption">
+                                <div class="portfolio-caption-heading">Deluxe Double</div>
+                                <div class="portfolio-caption-subheading text-muted">A Multiple Bed Room</div>
+                                <span class="room-price-badge">&#8369;2,500 / night</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-sm-6 mb-4">
+                        <!-- Portfolio item 2-->
+                        <div class="portfolio-item">
+                            <a class="portfolio-link" data-bs-toggle="modal" href="#portfolioModal2">
+                                <div class="portfolio-hover">
+                                    <div class="portfolio-hover-content"><i class="fas fa-clipboard-check fa-3x"></i></div>
+                                </div>
+                                <img class="img-fluid" src="assets/img/portfolio/RoomImage2.jpg" alt="..." />
+                            </a>
+                            <div class="portfolio-caption">
+                                <div class="portfolio-caption-heading">Royal Chamber</div>
+                                <div class="portfolio-caption-subheading text-muted">A Royale Style Bed Room</div>
+                                <span class="room-price-badge">&#8369;3,800 / night</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-sm-6 mb-4">
+
+                        <!-- Portfolio item 3-->
+                        <div class="portfolio-item">
+                            <a class="portfolio-link" data-bs-toggle="modal" href="#portfolioModal3">
+                                <div class="portfolio-hover">
+                                    <div class="portfolio-hover-content"><i class="fas fa-clipboard-check fa-3x"></i></div>
+                                </div>
+                                <img class="img-fluid" src="assets/img/portfolio/RoomImage3.jpg" alt="..." />
+                            </a>
+                            <div class="portfolio-caption">
+                                <div class="portfolio-caption-heading">Luxury Loft</div>
+                                <div class="portfolio-caption-subheading text-muted">A Luxurious Room</div>
+                                <span class="room-price-badge">&#8369;4,200 / night</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-sm-6 mb-4 mb-lg-0">
+
+                        <!-- Portfolio item 4-->
+                        <div class="portfolio-item">
+                            <a class="portfolio-link" data-bs-toggle="modal" href="#portfolioModal4">
+                                <div class="portfolio-hover">
+                                    <div class="portfolio-hover-content"><i class="fas fa-clipboard-check fa-3x"></i></div>
+                                </div>
+                                <img class="img-fluid" src="assets/img/portfolio/RoomImage4.jpg" alt="..." />
+                            </a>
+                            <div class="portfolio-caption">
+                                <div class="portfolio-caption-heading">The Loft</div>
+                                <div class="portfolio-caption-subheading text-muted">A Small Windowed Room</div>
+                                <span class="room-price-badge">&#8369;2,800 / night</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-sm-6 mb-4 mb-sm-0">
+
+                        <!-- Portfolio item 5-->
+                        <div class="portfolio-item">
+                            <a class="portfolio-link" data-bs-toggle="modal" href="#portfolioModal5">
+                                <div class="portfolio-hover">
+                                    <div class="portfolio-hover-content"><i class="fas fa-clipboard-check fa-3x"></i></div>
+                                </div>
+                                <img class="img-fluid" src="assets/img/portfolio/RoomImage5.jpg" alt="..." />
+                            </a>
+                            <div class="portfolio-caption">
+                                <div class="portfolio-caption-heading">The Nook</div>
+                                <div class="portfolio-caption-subheading text-muted">A Small Neat Room</div>
+                                <span class="room-price-badge">&#8369;1,900 / night</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-sm-6">
+
+                        <!-- Portfolio item 6-->
+                        <div class="portfolio-item">
+                            <a class="portfolio-link" data-bs-toggle="modal" href="#portfolioModal6">
+                                <div class="portfolio-hover">
+                                    <div class="portfolio-hover-content"><i class="fas fa-clipboard-check fa-3x"></i></div>
+                                </div>
+                                <img class="img-fluid" src="assets/img/portfolio/RoomImage6.jpg" alt="..." />
+                            </a>
+                            <div class="portfolio-caption">
+                                <div class="portfolio-caption-heading">Presidential Suite</div>
+                                <div class="portfolio-caption-subheading text-muted">A Luxurious Presidential Bed Room</div>
+                                <span class="room-price-badge">&#8369;7,500 / night</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        
+        <!-- Services-->
+        <section class="page-section" id="services">
+            <div class="container">
+                <div class="text-center">
+                    <h2 class="section-heading text-uppercase">Services We Offer</h2>
+                    <h3 class="section-subheading text-muted">Explore a range of expert solutions tailored to meet your unique needs, from innovative strategies to hands-on support.</h3>
+                </div>
+                <div class="row g-4 text-center">
+                    <div class="col-md-4">
+                        <div class="service-card">
+                            <span class="fa-stack fa-4x">
+                                <i class="fas fa-circle fa-stack-2x text-primary"></i>
+                                <i class="fas fa-calendar-check fa-stack-1x fa-inverse"></i>
+                            </span>
+                            <h4 class="my-3">Event and Meeting Facilities</h4>
+                            <p class="text-muted">Versatile event spaces equipped with the latest technology, ideal for corporate meetings, conferences, and special occasions.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="service-card">
+                            <span class="fa-stack fa-4x">
+                                <i class="fas fa-circle fa-stack-2x text-primary"></i>
+                                <i class="fas fa-bed fa-stack-1x fa-inverse"></i>
+                            </span>
+                            <h4 class="my-3">Luxurious Room Accommodations</h4>
+                            <p class="text-muted">Spacious, well-appointed rooms with modern amenities to ensure a comfortable and relaxing stay.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="service-card">
+                            <span class="fa-stack fa-4x">
+                                <i class="fas fa-circle fa-stack-2x text-primary"></i>
+                                <i class="fas fa-spa fa-stack-1x fa-inverse"></i>
+                            </span>
+                            <h4 class="my-3">Spa and Wellness Services</h4>
+                            <p class="text-muted">A range of rejuvenating spa treatments and wellness programs to help you unwind and revitalize during your stay.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- About-->
+        <section class="page-section" id="about">
+            <div class="container">
+                <div class="text-center">
+                    <h2 class="section-heading text-uppercase">About Us</h2>
+                    <h3 class="section-subheading text-muted">Your gateway to easy hotel bookings and unforgettable stays.</h3>
+                </div>
+                <ul class="timeline">
+                    <li>
+                        <div class="timeline-image"><img class="rounded-circle img-fluid" src="assets/img/about/HotelEntrance.jpeg" alt="..." /></div>
+                        <div class="timeline-panel">
+                            <div class="timeline-heading">
+                                <h4 class="subheading"> Welcome to Hotel Reservation System</h4>
+                            </div>
+                            <div class="timeline-body"><p class="text-muted">Located in the heart of Balingasag, Hotel Reservation System combines modern luxury with local charm to offer a relaxing and memorable stay. Whether you're here for business or leisure, our comfortable rooms, personalized service, and top-notch amenities ensure a seamless experience from start to finish.
+
+                            </p></div>
+                        </div>
+                    </li>
+                    <li class="timeline-inverted">
+                        <div class="timeline-image"><img class="rounded-circle img-fluid" src="assets/img/about/HMStudents.png" alt="..." /></div>
+                        <div class="timeline-panel">
+                            <div class="timeline-heading">
+                                <h4 class="subheading">Our Mission</h4>
+                            </div>
+                            <div class="timeline-body"><p class="text-muted">At Hotel Reservation System, our mission is to provide every guest with a home away from home. With exceptional service, luxurious accommodations, and a range of amenities, we strive to make your stay as comfortable and enjoyable as possible, whether you're here for a quick visit or an extended stay.</p></div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="timeline-image"><img class="rounded-circle img-fluid" src="assets/img/about/BalingasagChapel.JPG" alt="..." /></div>
+                        <div class="timeline-panel">
+                            <div class="timeline-heading">
+                                <h4 class="subheading">Our Location</h4>
+                            </div>
+                            <div class="timeline-body"><p class="text-muted">We are a comfortable hotel located in Barangay 3, Balingasag, Misamis Oriental, offering easy access to local attractions and transportation hubs. Whether for business or leisure, we provide a relaxing stay with excellent amenities and friendly service to make your visit memorable.
+
+                            </p></div>
+                        </div>
+                    </li>
+                
+                    <li class="timeline-inverted">
+                        <div class="timeline-image">
+                            <h4>
+                                BOOK <br>
+                                ROOM <br>
+                                NOW!
+                            </h4>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Team-->
+        <section class="page-section bg-light" id="team">
+            <div class="container">
+                <div class="text-center">
+                    <h2 class="section-heading text-uppercase">Our Team</h2>
+                    <h3 class="section-subheading text-muted">A group of passionate students committed to learning, collaborating, and delivering creative solutions.</h3>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="team-member">
+                            <img class="mx-auto rounded-circle" src="assets/img/team/CarlProfile.jpeg" alt="..." />
+                            <h4>Carl Wyne S. Gallardo</h4>
+                            <p class="text-muted">UI Designer</p>
+                            <a class="btn btn-dark btn-social mx-2" href="#!" aria-label="Google Email"><i class="fab fa-google"></i></a>
+                            <a class="btn btn-dark btn-social mx-2" href="#!" aria-label="Facebook Profile"><i class="fab fa-facebook-f"></i></a>     
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="team-member">
+                            <img class="mx-auto rounded-circle" src="assets/img/team/IsabelProfile.png" alt="..." />
+                            <h4>Ma. Isabel Cabana</h4>
+                            <p class="text-muted">Project Manage</p>
+                            <a class="btn btn-dark btn-social mx-2" href="#!" aria-label="Google Email"><i class="fab fa-google"></i></a>
+                            <a class="btn btn-dark btn-social mx-2" href="#!" aria-label="Facebook Profile"><i class="fab fa-facebook-f"></i></a>                        
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="team-member">
+                            <img class="mx-auto rounded-circle" src="assets/img/team/VonProfile.png" alt="..." />
+                            <h4>Von Cedric P. Miranda</h4>
+                            <p class="text-muted">Asst. Designer/Analyst</p>
+                            <a class="btn btn-dark btn-social mx-2" href="#!" aria-label="Google Email"><i class="fab fa-google"></i></a>
+                            <a class="btn btn-dark btn-social mx-2" href="#!" aria-label="Facebook Profile"><i class="fab fa-facebook-f"></i></a>     
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="team-member">
+                            <img class="mx-auto rounded-circle" src="assets/img/team/NazefProfile.png" alt="..." />
+                            <h4>Nazef Hawk Lague</h4>
+                            <p class="text-muted">System Analyst</p>
+                            <a class="btn btn-dark btn-social mx-2" href="#!" aria-label="Google Email"><i class="fab fa-google"></i></a>
+                            <a class="btn btn-dark btn-social mx-2" href="#!" aria-label="Facebook Profile"><i class="fab fa-facebook-f"></i></a>     
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="team-member">
+                            <img class="mx-auto rounded-circle" src="assets/img/team/CyrusProfile.png" alt="..." />
+                            <h4>Cyrus Dagoc</h4>
+                            <p class="text-muted">Programmer</p>
+                            <a class="btn btn-dark btn-social mx-2" href="#!" aria-label="Google Email"><i class="fab fa-google"></i></a>
+                            <a class="btn btn-dark btn-social mx-2" href="#!" aria-label="Facebook Profile"><i class="fab fa-facebook-f"></i></a>     
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="team-member">
+                            <img class="mx-auto rounded-circle" src="assets/img/team/MekayProfile.png" alt="..." />
+                            <h4>Mechaela Abecia</h4>
+                            <p class="text-muted">Asst. Programmer</p>
+                            <a class="btn btn-dark btn-social mx-2" href="#!" aria-label="Google Email"><i class="fab fa-google"></i></a>
+                            <a class="btn btn-dark btn-social mx-2" href="#!" aria-label="Facebook Profile"><i class="fab fa-facebook-f"></i></a>     
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-8 mx-auto text-center"><p class="large text-muted">We are students who are passionate about learning, collaborating, and bringing fresh ideas to life. Together, we strive to create meaningful solutions and grow through every experience.</p></div>
+                </div>
+            </div>
+        </section>
+        <!-- Clients-->
+        <div class="py-5">
+            <div class="container">
+                <div class="TeamLogowithLinks">
+                    <div class="col-md-3 col-sm-6 my-3">
+                        <a href="#!"><img class="img-fluid img-brand d-block mx-auto" src="assets/img/logos/google.svg" alt="..." aria-label="Google Logo" /></a>
+                    </div>
+                    <div class="col-md-3 col-sm-6 my-3">
+                        <a href="#!"><img class="img-fluid img-brand d-block mx-auto" src="assets/img/logos/facebook.svg" alt="..." aria-label="Facebook Logo" /></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Contact-->
+        <section class="page-section" id="contact">
+            <div class="container">
+                <div class="text-center">
+                    <h2 class="section-heading text-uppercase">Contact Us</h2>
+                    <h3 class="section-subheading text-muted">Get in Touch.</h3>
+                </div>
+                <!-- Contact info cards -->
+                <div class="row mb-5 justify-content-center">
+                    <div class="col-md-4">
+                        <div class="contact-info-card">
+                            <div class="ci-icon"><i class="fas fa-map-marker-alt"></i></div>
+                            <h6>Our Location</h6>
+                            <p>Brgy. 3, Balingasag,<br>Misamis Oriental</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="contact-info-card">
+                            <div class="ci-icon"><i class="fas fa-phone"></i></div>
+                            <h6>Phone Number</h6>
+                            <p>+63 XXX XXX XXXX</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="contact-info-card">
+                            <div class="ci-icon"><i class="fas fa-envelope"></i></div>
+                            <h6>Email Address</h6>
+                            <p>hms@example.com</p>
+                        </div>
+                    </div>
+                </div>
+                <form id="contactForm">
+                    <div class="row align-items-stretch mb-5">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <!-- Name input-->
+                                <input class="form-control" id="name" type="text" placeholder="Your Name *" data-sb-validations="required" />
+                                <div class="invalid-feedback" data-sb-feedback="name:required">A name is required.</div>
+                            </div>
+                            <div class="form-group">
+                                <!-- Email address input-->
+                                <input class="form-control" id="email" type="email" placeholder="Your Email *" data-sb-validations="required,email" />
+                                <div class="invalid-feedback" data-sb-feedback="email:required">An email is required.</div>
+                                <div class="invalid-feedback" data-sb-feedback="email:email">Email is not valid.</div>
+                            </div>
+                            <div class="form-group mb-md-0">
+                                <!-- Phone number input-->
+                                <input class="form-control" id="phone" type="tel" placeholder="Your Phone *" data-sb-validations="required" />
+                                <div class="invalid-feedback" data-sb-feedback="phone:required">A phone number is required.</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group form-group-textarea mb-md-0">
+                                <!-- Message input-->
+                                <textarea class="form-control" id="message" placeholder="Your Message *" data-sb-validations="required"></textarea>
+                                <div class="invalid-feedback" data-sb-feedback="message:required">A message is required.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Submit success message-->
+                    <div class="d-none" id="submitSuccessMessage">
+                        <div class="text-center mb-3">
+                            <div class="fw-bolder text-success fs-5"><i class="fas fa-check-circle me-2"></i>Message sent successfully!</div>
+                            <p class="text-muted mt-1">Thank you for reaching out. We'll get back to you shortly.</p>
+                        </div>
+                    </div>
+                    <!-- Submit error message-->
+                    <div class="d-none" id="submitErrorMessage"><div class="text-center text-danger mb-3"><i class="fas fa-exclamation-circle me-2"></i>Error sending message. Please try again.</div></div>
+                    <!-- Submit Button-->
+                    <div class="text-center"><button class="btn btn-primary btn-xl text-uppercase" id="submitButton" type="submit">Send Message</button></div>
+                </form>
+            </div>
+        </section>
+        <!-- Footer-->
+        <footer class="footer py-5">
+            <div class="container">
+                <div class="row gy-4">
+                    <div class="col-lg-4">
+                        <a href="#page-top"><img height="44" src="assets/img/logos/HMS_LOGO.png" alt="HMS Logo" class="mb-3"></a>
+                        <p class="text-muted small mt-2">Hotel Reservation System &mdash; where comfort meets convenience. Located in Balingasag, Misamis Oriental.</p>
+                    </div>
+                    <div class="col-lg-2 col-6">
+                        <h6 class="fw-bold text-uppercase mb-3" style="font-size:.8rem;letter-spacing:.08em;">Quick Links</h6>
+                        <ul class="list-unstyled">
+                            <li><a href="#portfolio" class="footer-link">Rooms</a></li>
+                            <li><a href="#services" class="footer-link">Services</a></li>
+                            <li><a href="#about" class="footer-link">About Us</a></li>
+                            <li><a href="#team" class="footer-link">Team</a></li>
+                            <li><a href="#contact" class="footer-link">Contact</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-3 col-6">
+                        <h6 class="fw-bold text-uppercase mb-3" style="font-size:.8rem;letter-spacing:.08em;">Contact Info</h6>
+                        <ul class="list-unstyled small text-muted">
+                            <li class="mb-2"><i class="fas fa-map-marker-alt me-2" style="color:#d6bd18;"></i>Brgy. 3, Balingasag, Misamis Oriental</li>
+                            <li class="mb-2"><i class="fas fa-phone me-2" style="color:#d6bd18;"></i>+63 XXX XXX XXXX</li>
+                            <li class="mb-2"><i class="fas fa-envelope me-2" style="color:#d6bd18;"></i>hms@example.com</li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-3 text-center">
+                        <h6 class="fw-bold text-uppercase mb-3" style="font-size:.8rem;letter-spacing:.08em;">Follow Us</h6>
+                        <div class="d-flex gap-2 mb-3 align-items-center justify-content-center">
+                            <a class="btn btn-dark btn-social" href="#!" aria-label="Google"><i class="fab fa-google"></i></a>
+                            <a class="btn btn-dark btn-social" href="#!" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        </div>
+                        <p class="small text-muted mb-1">Copyright &copy; HMS 2024</p>
+                        <div>
+                            <a class="footer-link d-inline me-3" href="#!">Privacy Policy</a>
+                            <a class="footer-link d-inline" href="#!">Terms of Use</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- Portfolio Modals-->
+        <!-- Portfolio item 1 modal popup-->
+        <div class="portfolio-modal modal fade" id="portfolioModal1" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered">
+                <div class="modal-content">
+                    <button class="rm-close-btn" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
+                    <div class="rm-body">
+                        <div class="rm-img-col">
+                            <img src="assets/img/portfolio/RoomImage1.jpg" alt="Deluxe Double" />
+                            <div class="rm-img-overlay"></div>
+                            <div class="rm-price-tag">&#8369;2,500<small>per night</small></div>
+                        </div>
+                        <div class="rm-detail-col">
+                            <h2 class="rm-title">Deluxe Double</h2>
+                            <p class="rm-subtitle">Comfortable and spacious room perfect for couples or solo travelers.</p>
+                            <div class="rm-badges">
+                                <span class="rm-badge"><i class="fas fa-user-friends"></i> 2 Guests</span>
+                                <span class="rm-badge"><i class="fas fa-bed"></i> King Bed</span>
+                                <span class="rm-badge"><i class="fas fa-ruler-combined"></i> 35 m&sup2;</span>
+                                <span class="rm-badge"><i class="fas fa-eye"></i> Garden View</span>
+                            </div>
+                            <p class="rm-section-title">Amenities</p>
+                            <div class="rm-amenities-grid">
+                                <div class="rm-amenity"><i class="fas fa-wifi"></i> Free Wi-Fi</div>
+                                <div class="rm-amenity"><i class="fas fa-snowflake"></i> Air Conditioning</div>
+                                <div class="rm-amenity"><i class="fas fa-tv"></i> Smart TV</div>
+                                <div class="rm-amenity"><i class="fas fa-bath"></i> En-suite Bathroom</div>
+                                <div class="rm-amenity"><i class="fas fa-glass-martini-alt"></i> Mini Bar</div>
+                                <div class="rm-amenity"><i class="fas fa-concierge-bell"></i> 24/7 Room Service</div>
+                                <div class="rm-amenity"><i class="fas fa-lock"></i> In-room Safe</div>
+                                <div class="rm-amenity"><i class="fas fa-tshirt"></i> Daily Housekeeping</div>
+                            </div>
+                            <div class="rm-info-strip">
+                                <div class="rm-info-item"><span class="rm-info-label">Check-in</span><span class="rm-info-val">2:00 PM</span></div>
+                                <div class="rm-info-item"><span class="rm-info-label">Check-out</span><span class="rm-info-val">12:00 PM</span></div>
+                                <div class="rm-info-item"><span class="rm-info-label">Min Stay</span><span class="rm-info-val">1 Night</span></div>
+                            </div>
+                            <button class="rm-reserve-btn" onclick="window.location.href='Html folder/PaymentForm.html'">
+                                <i class="fas fa-calendar-check"></i> Reserve This Room
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Portfolio item 2 modal popup-->
+        <div class="portfolio-modal modal fade" id="portfolioModal2" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered">
+                <div class="modal-content">
+                    <button class="rm-close-btn" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
+                    <div class="rm-body">
+                        <div class="rm-img-col">
+                            <img src="assets/img/portfolio/RoomImage2.jpg" alt="Royal Chamber" />
+                            <div class="rm-img-overlay"></div>
+                            <div class="rm-price-tag">&#8369;3,800<small>per night</small></div>
+                        </div>
+                        <div class="rm-detail-col">
+                            <h2 class="rm-title">Royal Chamber</h2>
+                            <p class="rm-subtitle">Regal elegance for guests who deserve nothing but the finest.</p>
+                            <div class="rm-badges">
+                                <span class="rm-badge"><i class="fas fa-user-friends"></i> 2 Guests</span>
+                                <span class="rm-badge"><i class="fas fa-bed"></i> Royal King Bed</span>
+                                <span class="rm-badge"><i class="fas fa-ruler-combined"></i> 48 m&sup2;</span>
+                                <span class="rm-badge"><i class="fas fa-city"></i> City View</span>
+                            </div>
+                            <p class="rm-section-title">Amenities</p>
+                            <div class="rm-amenities-grid">
+                                <div class="rm-amenity"><i class="fas fa-wifi"></i> Free Wi-Fi</div>
+                                <div class="rm-amenity"><i class="fas fa-hot-tub"></i> Jacuzzi Bath</div>
+                                <div class="rm-amenity"><i class="fas fa-tv"></i> Smart TV</div>
+                                <div class="rm-amenity"><i class="fas fa-couch"></i> Sitting Area</div>
+                                <div class="rm-amenity"><i class="fas fa-glass-martini-alt"></i> Premium Mini Bar</div>
+                                <div class="rm-amenity"><i class="fas fa-user-tie"></i> Butler Service</div>
+                                <div class="rm-amenity"><i class="fas fa-gem"></i> Premium Bedding</div>
+                                <div class="rm-amenity"><i class="fas fa-tshirt"></i> Twice-daily Housekeeping</div>
+                            </div>
+                            <div class="rm-info-strip">
+                                <div class="rm-info-item"><span class="rm-info-label">Check-in</span><span class="rm-info-val">2:00 PM</span></div>
+                                <div class="rm-info-item"><span class="rm-info-label">Check-out</span><span class="rm-info-val">12:00 PM</span></div>
+                                <div class="rm-info-item"><span class="rm-info-label">Min Stay</span><span class="rm-info-val">1 Night</span></div>
+                            </div>
+                            <button class="rm-reserve-btn" onclick="window.location.href='Html folder/PaymentForm.html'">
+                                <i class="fas fa-calendar-check"></i> Reserve This Room
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Portfolio item 3 modal popup-->
+        <div class="portfolio-modal modal fade" id="portfolioModal3" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered">
+                <div class="modal-content">
+                    <button class="rm-close-btn" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
+                    <div class="rm-body">
+                        <div class="rm-img-col">
+                            <img src="assets/img/portfolio/RoomImage3.jpg" alt="Luxury Loft" />
+                            <div class="rm-img-overlay"></div>
+                            <div class="rm-price-tag">&#8369;4,200<small>per night</small></div>
+                        </div>
+                        <div class="rm-detail-col">
+                            <h2 class="rm-title">Luxury Loft</h2>
+                            <p class="rm-subtitle">A sophisticated loft-style retreat for the discerning traveler.</p>
+                            <div class="rm-badges">
+                                <span class="rm-badge"><i class="fas fa-user-friends"></i> 2 Guests</span>
+                                <span class="rm-badge"><i class="fas fa-bed"></i> Queen Bed</span>
+                                <span class="rm-badge"><i class="fas fa-ruler-combined"></i> 55 m&sup2;</span>
+                                <span class="rm-badge"><i class="fas fa-door-open"></i> Private Terrace</span>
+                            </div>
+                            <p class="rm-section-title">Amenities</p>
+                            <div class="rm-amenities-grid">
+                                <div class="rm-amenity"><i class="fas fa-wifi"></i> Free Wi-Fi</div>
+                                <div class="rm-amenity"><i class="fas fa-snowflake"></i> Air Conditioning</div>
+                                <div class="rm-amenity"><i class="fas fa-tv"></i> Smart TV</div>
+                                <div class="rm-amenity"><i class="fas fa-door-open"></i> Private Terrace</div>
+                                <div class="rm-amenity"><i class="fas fa-tshirt"></i> Walk-in Closet</div>
+                                <div class="rm-amenity"><i class="fas fa-utensils"></i> Breakfast Included</div>
+                                <div class="rm-amenity"><i class="fas fa-concierge-bell"></i> Concierge</div>
+                                <div class="rm-amenity"><i class="fas fa-paint-brush"></i> Designer Furnishings</div>
+                            </div>
+                            <div class="rm-info-strip">
+                                <div class="rm-info-item"><span class="rm-info-label">Check-in</span><span class="rm-info-val">2:00 PM</span></div>
+                                <div class="rm-info-item"><span class="rm-info-label">Check-out</span><span class="rm-info-val">12:00 PM</span></div>
+                                <div class="rm-info-item"><span class="rm-info-label">Min Stay</span><span class="rm-info-val">2 Nights</span></div>
+                            </div>
+                            <button class="rm-reserve-btn" onclick="window.location.href='Html folder/PaymentForm.html'">
+                                <i class="fas fa-calendar-check"></i> Reserve This Room
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Portfolio item 4 modal popup-->
+        <div class="portfolio-modal modal fade" id="portfolioModal4" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered">
+                <div class="modal-content">
+                    <button class="rm-close-btn" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
+                    <div class="rm-body">
+                        <div class="rm-img-col">
+                            <img src="assets/img/portfolio/RoomImage4.jpg" alt="The Loft" />
+                            <div class="rm-img-overlay"></div>
+                            <div class="rm-price-tag">&#8369;2,800<small>per night</small></div>
+                        </div>
+                        <div class="rm-detail-col">
+                            <h2 class="rm-title">The Loft</h2>
+                            <p class="rm-subtitle">Contemporary compact loft with breathtaking views &mdash; ideal for business travelers.</p>
+                            <div class="rm-badges">
+                                <span class="rm-badge"><i class="fas fa-user"></i> 1&ndash;2 Guests</span>
+                                <span class="rm-badge"><i class="fas fa-bed"></i> Double Bed</span>
+                                <span class="rm-badge"><i class="fas fa-ruler-combined"></i> 28 m&sup2;</span>
+                                <span class="rm-badge"><i class="fas fa-city"></i> City View</span>
+                            </div>
+                            <p class="rm-section-title">Amenities</p>
+                            <div class="rm-amenities-grid">
+                                <div class="rm-amenity"><i class="fas fa-wifi"></i> Free Wi-Fi</div>
+                                <div class="rm-amenity"><i class="fas fa-snowflake"></i> Air Conditioning</div>
+                                <div class="rm-amenity"><i class="fas fa-tv"></i> Smart TV</div>
+                                <div class="rm-amenity"><i class="fas fa-laptop"></i> Work Desk</div>
+                                <div class="rm-amenity"><i class="fas fa-coffee"></i> Coffee Maker</div>
+                                <div class="rm-amenity"><i class="fas fa-tshirt"></i> Daily Housekeeping</div>
+                                <div class="rm-amenity"><i class="fas fa-bath"></i> Private Bathroom</div>
+                                <div class="rm-amenity"><i class="fas fa-lock"></i> In-room Safe</div>
+                            </div>
+                            <div class="rm-info-strip">
+                                <div class="rm-info-item"><span class="rm-info-label">Check-in</span><span class="rm-info-val">2:00 PM</span></div>
+                                <div class="rm-info-item"><span class="rm-info-label">Check-out</span><span class="rm-info-val">12:00 PM</span></div>
+                                <div class="rm-info-item"><span class="rm-info-label">Min Stay</span><span class="rm-info-val">1 Night</span></div>
+                            </div>
+                            <button class="rm-reserve-btn" onclick="window.location.href='Html folder/PaymentForm.html'">
+                                <i class="fas fa-calendar-check"></i> Reserve This Room
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Portfolio item 5 modal popup-->
+        <div class="portfolio-modal modal fade" id="portfolioModal5" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered">
+                <div class="modal-content">
+                    <button class="rm-close-btn" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
+                    <div class="rm-body">
+                        <div class="rm-img-col">
+                            <img src="assets/img/portfolio/RoomImage5.jpg" alt="The Nook" />
+                            <div class="rm-img-overlay"></div>
+                            <div class="rm-price-tag">&#8369;1,900<small>per night</small></div>
+                        </div>
+                        <div class="rm-detail-col">
+                            <h2 class="rm-title">The Nook</h2>
+                            <p class="rm-subtitle">A cozy, budget-friendly haven with all the essentials for a great stay.</p>
+                            <div class="rm-badges">
+                                <span class="rm-badge"><i class="fas fa-user"></i> 1&ndash;2 Guests</span>
+                                <span class="rm-badge"><i class="fas fa-bed"></i> Twin Beds</span>
+                                <span class="rm-badge"><i class="fas fa-ruler-combined"></i> 22 m&sup2;</span>
+                                <span class="rm-badge"><i class="fas fa-tree"></i> Garden View</span>
+                            </div>
+                            <p class="rm-section-title">Amenities</p>
+                            <div class="rm-amenities-grid">
+                                <div class="rm-amenity"><i class="fas fa-wifi"></i> Free Wi-Fi</div>
+                                <div class="rm-amenity"><i class="fas fa-snowflake"></i> Air Conditioning</div>
+                                <div class="rm-amenity"><i class="fas fa-tv"></i> Flat-screen TV</div>
+                                <div class="rm-amenity"><i class="fas fa-bath"></i> Private Bathroom</div>
+                                <div class="rm-amenity"><i class="fas fa-coffee"></i> Coffee Maker</div>
+                                <div class="rm-amenity"><i class="fas fa-tshirt"></i> Daily Housekeeping</div>
+                                <div class="rm-amenity"><i class="fas fa-door-closed"></i> Wardrobe</div>
+                                <div class="rm-amenity"><i class="fas fa-wind"></i> Hair Dryer</div>
+                            </div>
+                            <div class="rm-info-strip">
+                                <div class="rm-info-item"><span class="rm-info-label">Check-in</span><span class="rm-info-val">2:00 PM</span></div>
+                                <div class="rm-info-item"><span class="rm-info-label">Check-out</span><span class="rm-info-val">12:00 PM</span></div>
+                                <div class="rm-info-item"><span class="rm-info-label">Min Stay</span><span class="rm-info-val">1 Night</span></div>
+                            </div>
+                            <button class="rm-reserve-btn" onclick="window.location.href='Html folder/PaymentForm.html'">
+                                <i class="fas fa-calendar-check"></i> Reserve This Room
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Portfolio item 6 modal popup-->
+        <div class="portfolio-modal modal fade" id="portfolioModal6" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered">
+                <div class="modal-content">
+                    <button class="rm-close-btn" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
+                    <div class="rm-body">
+                        <div class="rm-img-col">
+                            <img src="assets/img/portfolio/RoomImage6.jpg" alt="Presidential Suite" />
+                            <div class="rm-img-overlay"></div>
+                            <div class="rm-price-tag">&#8369;7,500<small>per night</small></div>
+                        </div>
+                        <div class="rm-detail-col">
+                            <h2 class="rm-title">Presidential Suite</h2>
+                            <p class="rm-subtitle">The pinnacle of luxury &mdash; an experience unlike any other.</p>
+                            <div class="rm-badges">
+                                <span class="rm-badge"><i class="fas fa-users"></i> Up to 4 Guests</span>
+                                <span class="rm-badge"><i class="fas fa-bed"></i> Master Bedroom</span>
+                                <span class="rm-badge"><i class="fas fa-ruler-combined"></i> 120 m&sup2;</span>
+                                <span class="rm-badge"><i class="fas fa-binoculars"></i> Panoramic View</span>
+                            </div>
+                            <p class="rm-section-title">Amenities</p>
+                            <div class="rm-amenities-grid">
+                                <div class="rm-amenity"><i class="fas fa-wifi"></i> High-speed Wi-Fi</div>
+                                <div class="rm-amenity"><i class="fas fa-user-tie"></i> Private Butler</div>
+                                <div class="rm-amenity"><i class="fas fa-car"></i> Chauffeur Service</div>
+                                <div class="rm-amenity"><i class="fas fa-utensils"></i> Gourmet Dining</div>
+                                <div class="rm-amenity"><i class="fas fa-couch"></i> Private Living Room</div>
+                                <div class="rm-amenity"><i class="fas fa-hot-tub"></i> Jacuzzi Tub</div>
+                                <div class="rm-amenity"><i class="fas fa-tshirt"></i> 24hr Housekeeping</div>
+                                <div class="rm-amenity"><i class="fas fa-door-open"></i> Dedicated Entrance</div>
+                            </div>
+                            <div class="rm-info-strip">
+                                <div class="rm-info-item"><span class="rm-info-label">Check-in</span><span class="rm-info-val">2:00 PM</span></div>
+                                <div class="rm-info-item"><span class="rm-info-label">Check-out</span><span class="rm-info-val">12:00 PM</span></div>
+                                <div class="rm-info-item"><span class="rm-info-label">Min Stay</span><span class="rm-info-val">2 Nights</span></div>
+                            </div>
+                            <button class="rm-reserve-btn" onclick="window.location.href='Html folder/PaymentForm.html'">
+                                <i class="fas fa-calendar-check"></i> Reserve This Room
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Scroll to top -->
+        <button id="scrollTopBtn" aria-label="Scroll to top"><i class="fas fa-chevron-up"></i></button>
+
+        <!-- Chatbot Panel -->
+        <div id="chatbot-panel" role="dialog" aria-label="Chat with us">
+            <div id="chatbot-header">
+                <span><i class="fas fa-robot"></i> HMS Assistant</span>
+                <button id="chatbot-close" aria-label="Close chat">&times;</button>
+            </div>
+            <div id="chatbot-messages">
+                <div class="chat-msg bot">Hello! Welcome to HMS. How can I help you today?</div>
+            </div>
+            <div id="chatbot-input-row">
+                <input id="chatbot-input" type="text" placeholder="Type a message..." autocomplete="off" />
+                <button id="chatbot-send">Send</button>
+            </div>
+        </div>
+
+        <img id="chatbotbtn" src="assets/img/ChatBotImg.png" class="position-fixed bottom-0 end-0 m-4" alt="Chatbot Button">
+
+        <script src="JS/BootstrapBundle.js"></script>
+        <script src="JS/scripts.js?v=2"></script>
+        <script src="JS/BootstrapBundle2.js"></script>
+    </body>
+    
+</html>

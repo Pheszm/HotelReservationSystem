@@ -1,5 +1,6 @@
 # Hotel Reservation System
 https://pheszm.github.io/HotelReservationSystem/
+
 A static front-end hotel reservation system built with HTML, CSS, and JavaScript. Designed for browsing rooms, viewing services, and exploring hotel features.
 
 > **No backend** — all forms and interactions are UI demonstrations only.
